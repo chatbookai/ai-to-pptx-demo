@@ -202,7 +202,7 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
         }
         setGenStatus(1)
         dataUrl = inputData.dataUrl
-        const url = 'http://localhost/api/aipptx/generateOutline.php'
+        const url = 'https://fdzz.dandian.net/api/aipptx/generateOutline.php'
         const source = new SSE(url, {
             method: 'POST',
             headers: {
@@ -276,7 +276,7 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
     return (
       <>
         <div className="outline_content">
-            <h1>🤖 AI智能生成PPT演示文稿</h1>
+            <h1>AI智能生成PPT演示文稿</h1>
             <div className="outline_desc">生成大纲 ---&gt; 挑选模板 --&gt; 实时生成PPT</div>
             {genStatus == 0 && <div className="input_div">
                 <select defaultValue={selectType} onChange={e => setSelectType(e.target.value)}>

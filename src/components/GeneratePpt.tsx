@@ -30,7 +30,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
             setDescTime(descTime => descTime + 1)
         }, 1000)
         setGening(true)
-        const url = 'http://localhost/api/aipptx/generateContent.php'
+        const url = 'https://fdzz.dandian.net/api/aipptx/generateContent.php'
         const source = new SSE(url, {
             method: 'POST',
             headers: {
@@ -72,7 +72,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
 
     const asyncGenPptxInfo = useCallback((id: string) => {
         setPptxId(id)
-        const url = `http://localhost/api/aipptx/asyncPptInfo.php?pptId=${id}`
+        const url = `https://fdzz.dandian.net/api/aipptx/asyncPptInfo.php?pptId=${id}`
         const xhr = new XMLHttpRequest()
         xhr.open('GET', url, true)
         xhr.setRequestHeader('token', token)
@@ -119,7 +119,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
     }, [])
 
     const downloadPptx = useCallback((id: string) => {
-        const url = 'http://localhost/api/aipptx/downloadPptx.php'
+        const url = 'https://fdzz.dandian.net/api/aipptx/downloadPptx.php'
         const xhr = new XMLHttpRequest()
         xhr.open('POST', url, true)
         xhr.setRequestHeader('token', token)

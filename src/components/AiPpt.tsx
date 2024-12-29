@@ -20,7 +20,7 @@ function AiPpt() {
       alert('请在代码中设置apiKey')
       return
     }
-    const url = 'http://localhost/api/createApiToken'
+    const url = 'https://fdzz.dandian.net/api/createApiToken'
     const resp = await (await fetch(url, {
       method: 'POST',
       headers: {

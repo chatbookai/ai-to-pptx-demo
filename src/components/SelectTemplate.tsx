@@ -8,7 +8,7 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
     const [templates, setTemplates] = useState([] as any)
 
     const loadTemplates = useCallback(async () => {
-        const url = 'http://localhost/api/aipptx/randomTemplates.php'
+        const url = 'https://fdzz.dandian.net/api/aipptx/randomTemplates.php'
         const resp = await (await fetch(url, {
             method: 'POST',
             headers: {
@@ -53,7 +53,7 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
             <div className="template_div">
                 {templates.map((template: any) => (
                     <div className={template.id == templateId ? 'template template_select' : 'template'} key={template.id} onClick={() => selectTemplate(template)}>
-                        <img src={"http://localhost/api/aipptx/templates/" + template.id + ".png"} />
+                        <img src={"https://fdzz.dandian.net/api/aipptx/templates/" + template.id + ".png"} />
                     </div>
                 ))}
                 <div className="template_but">
