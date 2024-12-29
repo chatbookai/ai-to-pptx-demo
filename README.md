@@ -13,8 +13,9 @@ npm install
 
 npm run dev
 
+支持Vercel
 
-后端地址: 
+如果要自己部署后端服务: 请使用以下地址的PHP文件.
 
 https://github.com/chatbookai/SchoolDataCenter/tree/main/htdocs/api/aipptx
 
