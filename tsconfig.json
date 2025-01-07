@@ -11,6 +11,7 @@
   "compilerOptions": {
     "allowJs": true,
     "noImplicitAny": false,
-    "target": "ESNext"
+    "target": "ESNext",
+    "declaration": false
   }
 }
