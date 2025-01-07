@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import '../styles/SelectTemplate.css'
+import { BackendApi } from './Config'
 
 let background = null as any
 
@@ -8,7 +9,7 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
     const [templates, setTemplates] = useState([] as any)
 
     const loadTemplates = useCallback(async () => {
-        const url = 'https://fdzz.dandian.net/api/aipptx/randomTemplates.php'
+        const url = BackendApi + 'randomTemplates.php'
         const resp = await (await fetch(url, {
             method: 'POST',
             headers: {
@@ -27,13 +28,6 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
 
     const selectTemplate = useCallback((template: any) => {
         setTemplateId(template.id)
-        const src = template.coverUrl + '?token=' + token
-        calcSubjectColor(src).then((color) => {
-            if (background == null) {
-                background = document.body.style.background
-            }
-            document.body.style.background = color
-        })
     }, [token])
 
     useEffect(() => {
@@ -53,7 +47,7 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
             <div className="template_div">
                 {templates.map((template: any) => (
                     <div className={template.id == templateId ? 'template template_select' : 'template'} key={template.id} onClick={() => selectTemplate(template)}>
-                        <img src={"https://fdzz.dandian.net/api/aipptx/templates/" + template.id + ".png"} />
+                        <img src={BackendApi + "json/" + template.subject + ".png"} />
                     </div>
                 ))}
                 <div className="template_but">
@@ -64,70 +58,4 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
         </div>
       </>
     )
-}
-  
-async function calcSubjectColor(src: string) {
-    const img = new Image()
-    await new Promise(resolve => {
-        const eqOrigin = src.startsWith('data:') || src.startsWith(document.location.origin) || (src.startsWith('//') && (document.location.protocol + src).startsWith(document.location.origin))
-        if (!eqOrigin) {
-            img.crossOrigin = 'anonymous'
-        }
-        img.src = src
-        img.onload = function() {
-            resolve(img)
-        }
-        img.onerror = function () {
-            resolve(null)
-        }
-    })
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d') as any
-    canvas.width = img.width
-    canvas.height = img.height
-    if(canvas.width ==0)  {
-        return 
-    }
-    ctx.drawImage(img, 0, 0)
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    const data = imageData.data
-    const map = {} as any
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i]
-        const g = data[i + 1]
-        const b = data[i + 2]
-        const rgb = r + g + b
-        if (rgb <= 50 || rgb >= 660) {
-            // 忽略黑白
-            continue
-        }
-        const color = `${r},${g},${b}`
-        map[color] = (map[color] || 0) + 1
-    }
-    const valueMap = {} as any
-    for (const k in map) {
-        const v = map[k]
-        const ks = valueMap[v]
-        if (ks) {
-            ks.push(k)
-        } else {
-            valueMap[v] = [k]
-        }
-    }
-    const colors = [] as any
-    const values = Object.values(map).sort() as any
-    for (let i = values.length - 1; i >= 0; i--) {
-        const ks = valueMap[values[i]]
-        for (let j = 0; j < ks.length; j++) {
-            colors.push(ks[j])
-            if (colors.length >= 3) {
-                break
-            }
-        }
-        if (colors.length >= 3) {
-            break
-        }
-    }
-    // return `rgb(${colors[0]})`
-    return `linear-gradient(to bottom right, rgb(${colors[0]}), rgb(${colors[1]}), rgb(${colors[2]}))`
 }

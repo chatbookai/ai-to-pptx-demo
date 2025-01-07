@@ -3,6 +3,7 @@ import OutlineEdit from './OutlineEdit.tsx'
 import { marked } from 'marked'
 import { SSE } from '../utils/sse.js'
 import '../styles/GenerateOutline.css'
+import { BackendApi } from './Config'
 
 let outline = ''
 let dataUrl = ''
@@ -17,62 +18,9 @@ marked.setOptions({
     silent: true
 })
 
-const TestText = `# 如何使用AI来生成PPTX - PPT大纲
-
-## 1. AI生成PPTX的基础知识
-
-### 1.1 AI生成PPTX的定义与背景
-1.1.1 定义AI生成PPTX的概念。
-1.1.2 介绍AI在办公自动化中的应用背景。
-1.1.3 分析PPTX格式在现代办公中的重要性。
-
-### 1.2 AI生成PPTX的技术原理
-1.2.1 介绍自然语言处理（NLP）在AI生成PPTX中的作用。
-1.2.2 解释机器学习模型如何生成PPTX内容。
-1.2.3 讨论AI如何处理视觉设计元素。
-
-### 1.3 AI生成PPTX的优势与挑战
-1.3.1 列举AI生成PPTX的主要优势。
-1.3.2 分析AI生成PPTX面临的技术挑战。
-1.3.3 讨论AI生成PPTX对传统PPT制作的影响。
-
-## 2. 使用AI生成PPTX的实践指南
-
-### 2.1 选择合适的AI工具
-2.1.1 介绍市场上主流的AI生成PPTX工具。
-2.1.2 分析各工具的功能特点与适用场景。
-2.1.3 提供选择工具的评估标准。
-
-### 2.2 输入数据与内容准备
-2.2.1 解释如何准备输入数据以供AI处理。
-2.2.2 讨论内容结构化的重要性。
-2.2.3 提供内容准备的实用技巧。
-
-### 2.3 AI生成PPTX的流程
-2.3.1 详细描述AI生成PPTX的步骤。
-2.3.2 解释如何调整和优化生成的PPTX。
-2.3.3 讨论如何进行最终的审查与修改。
-
-## 3. AI生成PPTX的未来发展
-
-### 3.1 AI生成PPTX的技术趋势
-3.1.1 预测AI生成PPTX技术的未来发展方向。
-3.1.2 讨论AI与人类设计师的协作模式。
-3.1.3 分析AI生成PPTX在不同行业的应用潜力。
-
-### 3.2 用户体验与界面设计
-3.2.1 探讨AI工具用户界面的设计原则。
-3.2.2 分析用户体验对AI生成PPTX的影响。
-3.2.3 提供优化用户体验的建议。
-
-### 3.3 数据安全与隐私保护
-3.3.1 讨论AI生成PPTX过程中的数据安全问题。
-3.3.2 分析隐私保护在AI工具中的重要性。
-3.3.3 提供数据安全与隐私保护的实践指南。`
-
 function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: any) => void}) {
     const [selectType, setSelectType] = useState('subject')
-    const [subject, setSubject] = useState('')
+    const [subject, setSubject] = useState('2025年就业市场报告')
     const [text, setText] = useState('')
     // 生成状态: 0未开始 1生成中 2已完成
     const [genStatus, setGenStatus] = useState<number>(0)
@@ -202,7 +150,7 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
         }
         setGenStatus(1)
         dataUrl = inputData.dataUrl
-        const url = 'https://fdzz.dandian.net/api/aipptx/generateOutline.php'
+        const url = BackendApi + 'generateOutline.php'
         const source = new SSE(url, {
             method: 'POST',
             headers: {

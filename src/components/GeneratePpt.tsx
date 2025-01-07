@@ -5,6 +5,7 @@ import { SSE } from '../utils/sse.js'
 import { Ppt2Svg } from '../utils/ppt2svg.js'
 import { Ppt2Canvas } from '../utils/ppt2canvas.js'
 import '../styles/GeneratePpt.css'
+import { BackendApi } from './Config'
 
 let pptxObj = null as any
 let painter = null as any
@@ -30,7 +31,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
             setDescTime(descTime => descTime + 1)
         }, 1000)
         setGening(true)
-        const url = 'https://fdzz.dandian.net/api/aipptx/generateContent.php'
+        const url = BackendApi + 'generateContent.php'
         const source = new SSE(url, {
             method: 'POST',
             headers: {
@@ -44,7 +45,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
             const json = JSON.parse(data.data)
             if (json.pptId) {
                 setDescMsg(`正在生成中，进度 ${json.current}/${json.total}，请稍后...`)
-                asyncGenPptxInfo(json.pptId)
+                asyncGenPptxInfo(json.pptId, templateId)
             }
         }
         source.onend = function (data: any) {
@@ -70,9 +71,9 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         source.stream()
     }, [token])
 
-    const asyncGenPptxInfo = useCallback((id: string) => {
+    const asyncGenPptxInfo = useCallback((id: string, templateId: string) => {
         setPptxId(id)
-        const url = `https://fdzz.dandian.net/api/aipptx/asyncPptInfo.php?pptId=${id}`
+        const url = `${BackendApi}asyncPptInfo.php?pptId=${id}&templateId=${templateId}`
         const xhr = new XMLHttpRequest()
         xhr.open('GET', url, true)
         xhr.setRequestHeader('token', token)
@@ -119,7 +120,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
     }, [])
 
     const downloadPptx = useCallback((id: string) => {
-        const url = 'https://fdzz.dandian.net/api/aipptx/downloadPptx.php'
+        const url = BackendApi + 'downloadPptx.php'
         const xhr = new XMLHttpRequest()
         xhr.open('POST', url, true)
         xhr.setRequestHeader('token', token)
@@ -128,7 +129,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         xhr.onload = function () {
             if (this.status === 200) {
                 const resp = JSON.parse(this.responseText)
-                const fileUrl = resp.data.fileUrl
+                const fileUrl = BackendApi + resp.data.fileUrl
                 const a = document.createElement('a')
                 a.href = fileUrl
                 a.download = (resp.data.subject || 'download') + '.pptx'
@@ -228,6 +229,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
                 <div className="left_div_child">
                     <div className="left_div_child_child">
                         {pages.map((page: any, index: number) => {
+                            console.log("page", page)
                             canvasList[index] = createRef()
                             return (
                                 <div className="left_div_item" key={index} onClick={() => drawPptx(index)}>
