@@ -226,11 +226,10 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
         <div className="outline_content">
             <h1>AI智能生成PPT演示文稿</h1>
             <div className="outline_desc">生成大纲 ---&gt; 挑选模板 --&gt; 实时生成PPT</div>
+            <div className="outline_desc">请不要应用于商业用途</div>
             {genStatus == 0 && <div className="input_div">
                 <select defaultValue={selectType} onChange={e => setSelectType(e.target.value)}>
                     <option value="subject">根据主题</option>
-                    <option value="text">根据内容</option>
-                    <option value="file">根据文件</option>
                 </select>
                 {selectType == 'subject' && <div>
                     <input defaultValue={subject} placeholder="请输入PPT主题" maxLength={20} onBlur={e => setSubject(e.target.value)} />

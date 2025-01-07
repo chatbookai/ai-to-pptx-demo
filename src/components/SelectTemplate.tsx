@@ -50,9 +50,6 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
                         <img src={BackendApi + "json/" + template.subject + ".png"} />
                     </div>
                 ))}
-                <div className="template_but">
-                    <button onClick={loadTemplates}>换一批</button>
-                </div>
                 { templates.length == 0 && <div>模板加载中...</div> }
             </div>
         </div>

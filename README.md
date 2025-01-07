@@ -1,11 +1,12 @@
-本项目为Ai-To-PPTX的可行性验证类项目.
+Ai-To-PPTX 可行性验证项目
 
 前端代码是基于文多多的前端代码修改而来.
 
+仅给大家用于交流和学习使用, 过一段时间之后本项目会作废, 然后重新迁移到库: 
+
+https://github.com/chatbookai/ai-to-pptx
+
 后端代码为PHP,全部从头开发而来.
-
-目前支持的模板有限,后续会持续增加新的模板.
-
 
 前端本地开发:
 
@@ -15,10 +16,6 @@ npm run dev
 
 支持Vercel
 
-如果要自己部署后端服务: 请使用以下地址的PHP文件.
+Ai-To-PPTX 后端代码:
 
-https://github.com/chatbookai/SchoolDataCenter/tree/main/htdocs/api/aipptx
-
-要求PHP7.4+, MYSQL, REDIS
-
-数据库文件: data_ai_pptx_templates.sql
+https://github.com/chatbookai/ai-to-pptx-backend
