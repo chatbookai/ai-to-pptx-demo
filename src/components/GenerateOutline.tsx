@@ -20,7 +20,7 @@ marked.setOptions({
 
 function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: any) => void}) {
     const [selectType, setSelectType] = useState('subject')
-    const [subject, setSubject] = useState('2025年就业市场报告')
+    const [subject, setSubject] = useState('2024年就业市场多纬度分析')
     const [text, setText] = useState('')
     // 生成状态: 0未开始 1生成中 2已完成
     const [genStatus, setGenStatus] = useState<number>(0)

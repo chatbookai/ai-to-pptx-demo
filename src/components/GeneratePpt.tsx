@@ -46,7 +46,7 @@ function GeneratePpt({token, params, nextStep}: { token: string, params: any, ne
             const json = JSON.parse(data.data)
             if (json.pptId) {
                 setDescMsg(`正在生成中，进度 ${json.current}/${json.total}，请稍后...`)
-                asyncGenPptxInfo(json.pptId, templateId, json.current)
+                asyncGenPptxInfo(json.pptId, templateId)
             }
         }
         source.onend = function (data: any) {
@@ -72,8 +72,9 @@ function GeneratePpt({token, params, nextStep}: { token: string, params: any, ne
         source.stream()
     }, [token, counter])
 
-    const asyncGenPptxInfo = useCallback((id: string, templateId: string, currentId: string) => {
+    const asyncGenPptxInfo = useCallback((id: string, templateId: string) => {
         setPptxId(id)
+        const currentId = pptxObj && pptxObj.pages ? pptxObj.pages.length : 0
         const url = `${BackendApi}asyncPptInfo.php?currentId=${currentId}&pptId=${id}&templateId=${templateId}`
         const xhr = new XMLHttpRequest()
         xhr.open('GET', url, true)
@@ -86,7 +87,18 @@ function GeneratePpt({token, params, nextStep}: { token: string, params: any, ne
                 const gzip = base64js.toByteArray(gzipBase64)
                 const json = pako.ungzip(gzip, { to: 'string' })
                 const _pptxObj = JSON.parse(json)
-                pptxObj = _pptxObj
+                if (pptxObj && pptxObj.pages && _pptxObj && _pptxObj.pages) {
+                    Object.entries(_pptxObj.pages).forEach(([key, value]) => {
+                        const index = Number(key);
+                        if (!pptxObj.pages[index]) {
+                            pptxObj.pages[index] = value;
+                        }
+                    });
+                }
+                else {
+                    pptxObj = _pptxObj
+                }
+                console.log("pptxObj.pages", pptxObj.pages)
                 drawPptxList(resp.data.current - 1, true)
             }
         }
@@ -252,18 +264,22 @@ function GeneratePpt({token, params, nextStep}: { token: string, params: any, ne
                 {!gening && pptxId && <a className="ppt_download" onClick={() => {
                     nextStep('3')
                     setCounter(counter + 1)
+                    pptxObj = null as any
                 }}>使用模板4</a>}
                 {!gening && pptxId && <a className="ppt_download" onClick={() => {
                     nextStep('2')
                     setCounter(counter + 1)
+                    pptxObj = null as any
                 }}>使用模板3</a>}
                 {!gening && pptxId && <a className="ppt_download" onClick={() => {
                     nextStep('1')
                     setCounter(counter + 1)
+                    pptxObj = null as any
                 }}>使用模板2</a>}
                 {!gening && pptxId && <a className="ppt_download" onClick={() => {
                     nextStep('0')
                     setCounter(counter + 1)
+                    pptxObj = null as any
                 }}>使用模板1</a>}
                 {!gening && pptxId && <a className="ppt_download" onClick={() => downloadPptx(pptxId)}>下载PPTX</a>}
                 <div style={{ marginLeft: '200px' }}>
