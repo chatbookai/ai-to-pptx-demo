@@ -16,7 +16,7 @@ function resetSize() {
     painter.resetSize(width, width * 0.5625)
 }
 
-function GeneratePpt({token, params}: { token: string, params: any }) {
+function GeneratePpt({token, params, nextStep}: { token: string, params: any, nextStep: (id: string) => void }) {
 
     const [gening, setGening] = useState(false)
     const [descTime, setDescTime] = useState(0)
@@ -25,6 +25,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
     const [pptxId, setPptxId] = useState('')
     const [pages, setPages] = useState([] as any)
     const [currentIdx, setCurrentIdx] = useState(0)
+    const [counter, setCounter] = useState(0)
 
     const generatePptx = useCallback((templateId: string, outline: string, dataUrl: string) => {
         const timer = setInterval(() => {
@@ -45,7 +46,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
             const json = JSON.parse(data.data)
             if (json.pptId) {
                 setDescMsg(`正在生成中，进度 ${json.current}/${json.total}，请稍后...`)
-                asyncGenPptxInfo(json.pptId, templateId)
+                asyncGenPptxInfo(json.pptId, templateId, json.current)
             }
         }
         source.onend = function (data: any) {
@@ -69,11 +70,11 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
             alert('生成内容异常')
         }
         source.stream()
-    }, [token])
+    }, [token, counter])
 
-    const asyncGenPptxInfo = useCallback((id: string, templateId: string) => {
+    const asyncGenPptxInfo = useCallback((id: string, templateId: string, currentId: string) => {
         setPptxId(id)
-        const url = `${BackendApi}asyncPptInfo.php?pptId=${id}&templateId=${templateId}`
+        const url = `${BackendApi}asyncPptInfo.php?currentId=${currentId}&pptId=${id}&templateId=${templateId}`
         const xhr = new XMLHttpRequest()
         xhr.open('GET', url, true)
         xhr.setRequestHeader('token', token)
@@ -92,7 +93,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         xhr.onerror = function (e) {
             console.error(e)
         }
-    }, [token])
+    }, [token, counter])
     
     const drawPptxList = useCallback((_idx?: number, asyncGen?: boolean) => {
         const idx = _idx || 0
@@ -111,13 +112,13 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         }
 
         drawPptx(idx)
-    }, [token])
+    }, [token, counter])
 
     const drawPptx = useCallback((idx: number) => {
         setCurrentIdx(idx)
         //console.log("pptxObj", pptxObj, idx)
         painter.drawPptx(pptxObj, idx)
-    }, [])
+    }, [counter])
 
     const downloadPptx = useCallback((id: string) => {
         const url = BackendApi + 'downloadPptx.php'
@@ -139,7 +140,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         xhr.onerror = function (e) {
             console.error(e)
         }
-    }, [token])
+    }, [token, counter])
 
     const loadById = useCallback((id: string) => {
         setGening(false)
@@ -168,7 +169,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         xhr.onerror = function (e) {
             console.error(e)
         }
-    }, [token])
+    }, [token, counter])
 
     useEffect(() => {
         if (gening && currentIdx > 0) {
@@ -192,7 +193,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
                 }
             }
         }
-    }, [gening, pages])
+    }, [gening, pages, counter])
 
     useEffect(() => {
         // svg
@@ -215,7 +216,7 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
         } else {
           generatePptx(params.templateId, params.outline, params.dataUrl)
         }
-    }, [token])
+    }, [token, counter])
 
     return (
       <>
@@ -248,7 +249,23 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
                 </div>
             </div>
             <div className="right_div">
-                {!gening && pptxId && <a className="ppt_download" onClick={() => downloadPptx(pptxId)}>下载</a>}
+                {!gening && pptxId && <a className="ppt_download" onClick={() => {
+                    nextStep('3')
+                    setCounter(counter + 1)
+                }}>使用模板4</a>}
+                {!gening && pptxId && <a className="ppt_download" onClick={() => {
+                    nextStep('2')
+                    setCounter(counter + 1)
+                }}>使用模板3</a>}
+                {!gening && pptxId && <a className="ppt_download" onClick={() => {
+                    nextStep('1')
+                    setCounter(counter + 1)
+                }}>使用模板2</a>}
+                {!gening && pptxId && <a className="ppt_download" onClick={() => {
+                    nextStep('0')
+                    setCounter(counter + 1)
+                }}>使用模板1</a>}
+                {!gening && pptxId && <a className="ppt_download" onClick={() => downloadPptx(pptxId)}>下载PPTX</a>}
                 <div style={{ marginLeft: '200px' }}>
                     <svg ref={svg} className="right_canvas"></svg>
                 </div>
@@ -258,4 +275,4 @@ function GeneratePpt({token, params}: { token: string, params: any }) {
     )
   }
   
-  export default GeneratePpt
+export default GeneratePpt

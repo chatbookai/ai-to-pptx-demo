@@ -27,7 +27,9 @@ function AiPpt() {
             }} />
         )}
         {step == 3 && (
-            <GeneratePpt token={token} params={{templateId, outline, dataUrl}} />
+            <GeneratePpt token={token} params={{templateId, outline, dataUrl}} nextStep={(id)=> {
+              setTemplateId(() => id)
+          }}  />
         )}
       </div>
     </>

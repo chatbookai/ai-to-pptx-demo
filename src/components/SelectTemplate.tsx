@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import '../styles/SelectTemplate.css'
 import { BackendApi } from './Config'
 
-let background = null as any
-
 export default function SelectTemplate({token, nextStep}: { token: string, nextStep: (id: string) => void}) {
     const [templateId, setTemplateId] = useState('')
     const [templates, setTemplates] = useState([] as any)
@@ -41,7 +39,6 @@ export default function SelectTemplate({token, nextStep}: { token: string, nextS
             <div className="but_div">
                 <button onClick={() => {
                     nextStep(templateId)
-                    document.body.style.background = background
                 }}>下一步: 生成PPT</button>
             </div>
             <div className="template_div">
