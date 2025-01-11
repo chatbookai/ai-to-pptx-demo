@@ -167,6 +167,8 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
                     if(json && json.choices && json.choices[0] && json.choices[0]['delta'] && json.choices[0]['delta']['content']) {
                         console.log("json.choices[0]['delta']['content']", json.choices[0]['delta']['content'])
                         outline = outline + json.choices[0]['delta']['content']
+                        const outlineHtml = marked.parse(outline.replace('```markdown', '').replace(/```/g, '')) as string
+                        setOutlineHtml(outlineHtml)
                     }
                 }
                 catch(ErrorMsg: any) {
