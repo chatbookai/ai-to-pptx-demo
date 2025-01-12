@@ -47,7 +47,15 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
                     TitleTwo = Item.trim().substring(7)
                     ParseResult[TitleOne][TitleTwo] = []
                 }
+                else if(Item.trim().startsWith('#### '))  {
+                    //标题
+                    TitleThree = Item.trim().substring(11)
+                    if(TitleOne!="" && TitleTwo!="" && TitleThree!="")   {
+                        ParseResult[TitleOne][TitleTwo].push(TitleThree)
+                    }
+                }
                 else    {
+                    //标题
                     TitleThree = Item.trim().substring(6)
                     if(TitleOne!="" && TitleTwo!="" && TitleThree!="")   {
                         ParseResult[TitleOne][TitleTwo].push(TitleThree)
