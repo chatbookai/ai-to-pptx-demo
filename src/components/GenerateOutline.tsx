@@ -229,6 +229,13 @@ function GenerateOutline({token, nextStep}: { token: string, nextStep: (params: 
             <h1>AI智能生成PPT演示文稿</h1>
             <div className="outline_desc">生成大纲 ---&gt; 挑选模板 --&gt; 实时生成PPT</div>
             <div className="outline_desc">请不要应用于商业用途</div>
+            <div className="outline_desc">
+                <a href="https://github.com/chatbookai/ai-to-pptx-demo" target="_blank" rel="noopener noreferrer">简易版本前端</a>
+            </div>
+            <div className="outline_desc">
+                <a href="https://github.com/chatbookai/ai-to-pptx-backend" target="_blank" rel="noopener noreferrer">AI PPTX 后端</a>
+            </div>
+
             {genStatus == 0 && <div className="input_div">
                 <select defaultValue={selectType} onChange={e => setSelectType(e.target.value)}>
                     <option value="subject">根据主题</option>
