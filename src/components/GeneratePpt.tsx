@@ -199,7 +199,9 @@ function GeneratePpt({token, params, nextStep}: { token: string, params: any, ne
                 }
                 try {
                     const _ppt2Canvas = new Ppt2Canvas(imgCanvas)
-                    _ppt2Canvas.drawPptx(pptxObj, i)
+                    if(pptxObj && pptxObj.pages)   {
+                        _ppt2Canvas.drawPptx(pptxObj, i)
+                    }
                 } catch(e) {
                     console.log('渲染第' + (i + 1) + '页封面异常', e)
                 }
@@ -242,7 +244,6 @@ function GeneratePpt({token, params, nextStep}: { token: string, params: any, ne
                 <div className="left_div_child">
                     <div className="left_div_child_child">
                         {pages.map((page: any, index: number) => {
-                            console.log("page", page)
                             canvasList[index] = createRef()
                             return (
                                 <div className="left_div_item" key={index} onClick={() => drawPptx(index)}>
